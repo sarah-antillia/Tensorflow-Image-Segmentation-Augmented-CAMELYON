@@ -15,7 +15,7 @@ Tiled-ImageMask-Dataset-Camelyon</a><br>
 <br>
 <hr>
 <b>Actual Image Segmentation for 512x512 images.</b><br>
-As shown below, compared to the predicted masks, the original ground truth masks look quite jagged, which seems to be far from the precise annotations. 
+As shown below, compared to the predicted masks, the original ground truth masks look quite jagged, which seem to be far from the precise annotations. 
 <br>
 <table>
 <tr>
