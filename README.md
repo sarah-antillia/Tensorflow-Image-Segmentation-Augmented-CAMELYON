@@ -1,6 +1,6 @@
 <h2>Tensorflow-Image-Segmentation-Augmented-CAMELYON (2024/06/23)</h2>
 
-This is the first experiment of Image Segmentation for CAMELYON (CAncer MEtastases in LYmph nOdes)
+This is the first experiment of Image Segmentation for CAMELYON (CAncer MEtastases in LYmph nOdes challeNge)
  Images based on
 the <a href="https://github.com/sarah-antillia/Tensorflow-Image-Segmentation-API">Tensorflow-Image-Segmentation-API</a>, and
 Camelyon-ImageMask-Dataset 
@@ -15,7 +15,8 @@ Tiled-ImageMask-Dataset-Camelyon</a><br>
 <br>
 <hr>
 <b>Actual Image Segmentation for 512x512 images.</b><br>
-As shown below, compared to the predicted masks, the original ground truth masks look quite square and angular.<br>
+As shown below, compared to the predicted masks, the original ground truth masks look quite jagged, which seems to be far from the precise annotations. 
+<br>
 <table>
 <tr>
 <th>Input: image</th>
@@ -36,6 +37,30 @@ As shown below, compared to the predicted masks, the original ground truth masks
 <td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test_output/10691.jpg" width="320" height="auto"></td>
 </tr>
 </table>
+<br>
+A simple way to generate slightly better annotations (masks) is to apply the GaussianBlur operation to the original jagged mask to smooth out the edges of the masks.
+Of course, this is one of some possible approachs to improve the jagged annotation.
+<br><br>
+<table>
+<tr>
+<th>Image</th>
+<th>Mask (ground_truth)</th>
+<th> GaussianBlurred mask</th>
+</tr>
+<tr>
+<td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test/images/10674.jpg" width="320" height="auto"></td>
+<td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test/masks/10674.jpg" width="320" height="auto"></td>
+<td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test/blurred_masks/10674.jpg" width="320" height="auto"></td>
+</tr>
+
+<tr>
+<td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test/images/10691.jpg" width="320" height="auto"></td>
+
+<td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test/masks/10691.jpg" width="320" height="auto"></td>
+<td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test/blurred_masks/10691.jpg" width="320" height="auto"></td>
+</tr>
+</table>
+
 
 <hr>
 <br>
