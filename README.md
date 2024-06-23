@@ -267,7 +267,7 @@ k        = 1.0
 alpha  = 1.2
 beta   = 10  
 </pre>
-In this configuration file above, we added the following parameters to enable <b>epoch_change_infer</b> callbacks in [train] section.<br>
+In this configuration file above, we added the following parameters to enable <b>epoch_change_infer</b> callback in [train] section.<br>
 <pre>
 [train]
 ;Inference execution flag on epoch_changed
