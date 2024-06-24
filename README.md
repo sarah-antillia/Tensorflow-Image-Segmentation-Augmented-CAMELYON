@@ -1,10 +1,14 @@
-<h2>Tensorflow-Image-Segmentation-Augmented-CAMELYON (2024/06/23)</h2>
-
-This is the first experiment of Image Segmentation for CAMELYON (CAncer MEtastases in LYmph nOdes challeNge)
+<h2>Tensorflow-Image-Segmentation-Augmented-CAMELYON (Updated: 2024/06/25)</h2>
+<li>2024/06/24: Modified to use 
+<a href="https://drive.google.com/file/d/1baYf5o-B5MWR4JEio5FgHl0nWzjx-sIA/view?usp=sharing">GaussianBlurred ImageMaskDataset </a>
+to improve segementation accuracy.</li>
+This is the second experiment of Image Segmentation for CAMELYON (CAncer MEtastases in LYmph nOdes challeNge)
  Images based on
 the <a href="https://github.com/sarah-antillia/Tensorflow-Image-Segmentation-API">Tensorflow-Image-Segmentation-API</a>, and
 Camelyon-ImageMask-Dataset 
-<a href="https://drive.google.com/file/d/1X7Qx2hCBnXdM7-eh0t6YnyUYmnK2Wbj-/view?usp=sharing">Camelyon-ImageMask-Dataset-512x512-JPG-V1.zip</a>
+<a href="https://drive.google.com/file/d/1baYf5o-B5MWR4JEio5FgHl0nWzjx-sIA/view?usp=sharing">
+Camelyon-ImageMask-Dataset-512x512-blurred-27x27-JPG-V2.zip
+</a>
 , which was derived by us from <a href="https://www.kaggle.com/datasets/osmanf/camelyon-preprocessed">
 Camelyon_preprocessed</a> in kaggle.com website.
 <br><br>
@@ -12,15 +16,57 @@ Camelyon_preprocessed</a> in kaggle.com website.
 On <b>Non-Tiled-Camelyon-ImageMask-Dataset</b>, please refer to <a href="https://github.com/sarah-antillia/Tiled-ImageMask-Dataset-Camelyon">
 Tiled-ImageMask-Dataset-Camelyon</a><br>
  -->
+As mentioned in the first experiment, the original ground truth masks look quite jagged, which seems to be far from the precise annotations.
+A simple way to generate slightly better annotations (masks) is to apply the GaussianBlur operation to the original jagged mask 
+to smooth out the edges of the masks. Of course, this is one of some possible approachs to improve the jagged annotation. <br>
 <br>
-<hr>
-<b>Actual Image Segmentation for 512x512 images.</b><br>
-As shown below, compared to the predicted masks, the original ground truth masks look quite jagged, which seem to be far from the precise annotations. 
+
+The mask datasets in test, train and valid subdatsets of this new blurred dataset were created by applying GaussianBlur operation
+of kernel size (27,27) to the original mask files of <a href="https://www.kaggle.com/datasets/osmanf/camelyon-preprocessed">
+Camelyon_preprocessed</a>.
+You may also try an online blurring of masks by setting blur parameters in [mask] section in 
+<a href="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/train_eval_infer.config">
+train_eval_infer.config</a> file as shown below.<br>
+<pre>
+[mask]
+blur      = True
+blur_size = (17,17)
+</pre>
+This setting can be used for the first unblurred ImageMask-Dataset
+<a href="https://drive.google.com/file/d/1X7Qx2hCBnXdM7-eh0t6YnyUYmnK2Wbj-/view?usp=sharing">Camelyon-ImageMask-Dataset-512x512-JPG-V1.zip</a>.<br>
+
 <br>
+<b>Mask and GaussianBlurred mask comaprison</b><br>
 <table>
 <tr>
 <th>Input: image</th>
 <th>Mask (ground_truth)</th>
+<th>GaussianBlurred mask</th>
+</tr>
+<tr>
+<td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test/images/10674.jpg" width="320" height="auto"></td>
+<td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test/unblurred_masks/10674.jpg" width="320" height="auto"></td>
+
+<td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test/masks/10674.jpg" width="320" height="auto"></td>
+</tr>
+
+<tr>
+<td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test/images/10691.jpg" width="320" height="auto"></td>
+<td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test/unblurred_masks/10691.jpg" width="320" height="auto"></td>
+
+<td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test/masks/10691.jpg" width="320" height="auto"></td>
+</tr>
+</table>
+
+
+<br>
+<hr>
+<b>Actual Image Segmentation for 512x512 images.</b><br>
+<br>
+<table>
+<tr>
+<th>Input: image</th>
+<th>GaussianBlurred mask(ground_truth)</th>
 <th>Prediction: inferred_mask</th>
 </tr>
 <tr>
@@ -37,30 +83,6 @@ As shown below, compared to the predicted masks, the original ground truth masks
 <td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test_output/10691.jpg" width="320" height="auto"></td>
 </tr>
 </table>
-<br>
-A simple way to generate slightly better annotations (masks) is to apply the GaussianBlur operation to the original jagged mask to smooth out the edges of the masks.
-Of course, this is one of some possible approachs to improve the jagged annotation.
-<br><br>
-<table>
-<tr>
-<th>Image</th>
-<th>Mask (ground_truth)</th>
-<th> GaussianBlurred mask</th>
-</tr>
-<tr>
-<td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test/images/10674.jpg" width="320" height="auto"></td>
-<td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test/masks/10674.jpg" width="320" height="auto"></td>
-<td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test/blurred_masks/10674.jpg" width="320" height="auto"></td>
-</tr>
-
-<tr>
-<td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test/images/10691.jpg" width="320" height="auto"></td>
-
-<td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test/masks/10691.jpg" width="320" height="auto"></td>
-<td><img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/mini_test/blurred_masks/10691.jpg" width="320" height="auto"></td>
-</tr>
-</table>
-
 
 <hr>
 <br>
@@ -109,7 +131,9 @@ Please see alo;<br>
 </h3>
  If you would like to train this Camelyon Segmentation model by yourself,
  please download the dataset from the google drive  
-<a href="https://drive.google.com/file/d/1X7Qx2hCBnXdM7-eh0t6YnyUYmnK2Wbj-/view?usp=sharing">Camelyon-ImageMask-Dataset-512x512-JPG-V1.zip</a>
+ <a href="https://drive.google.com/file/d/1baYf5o-B5MWR4JEio5FgHl0nWzjx-sIA/view?usp=sharing">
+Camelyon-ImageMask-Dataset-512x512-blurred-27x27-JPG-V2.zip
+</a>
 <br>
 <br>
 Please expand the downloaded ImageMaskDataset and place them under <b>./dataset</b> folder to be
@@ -129,7 +153,7 @@ Please expand the downloaded ImageMaskDataset and place them under <b>./dataset<
 <br>
 
 <b>Camelyon Dataset Statistics</b><br>
-<img src ="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/Camelyon-ImageMask-Dataset-512x512-JPG-V1_Statistics.png" width="512" height="auto"><br>
+<img src ="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/Camelyon-ImageMask-Dataset-512x512-blurred-27x27-JPG-V2_Statistics.png" width="512" height="auto"><br>
 <br>
 As shown above, the number of images of train and valid dataset is not necessarily large. Therefore, probably an online augmentation strategy to
 train this model may be effective to improve segmentation accuracy.
@@ -158,11 +182,11 @@ Please move to ./projects/Camelyon and run the following bat file.<br>
 </pre>
 <pre>
 ; train_eval_infer.config
-; 2024/06/22 (C) antillia.com
+; 2024/06/24 (C) antillia.com
 
 [model]
-model          = "TensorflowUNet"
-generator      = True
+model         = "TensorflowUNet"
+generator     = True
 image_width    = 512
 image_height   = 512
 image_channels = 3
@@ -228,7 +252,7 @@ mask_datapath  = "./mini_test/masks/"
 images_dir    = "./mini_test/images"
 output_dir    = "./mini_test_output"
 merged_dir    = "./mini_test_output_merged"
-;blur          = True
+blur          = True
 
 [tiledinfer] 
 overlapping   = 128
@@ -238,6 +262,7 @@ merged_dir    = "./tiled_mini_test_output_merged"
 bitwise_blending = False
 ;binarize      = True
 mask_colorize = True
+
 
 [segmentation]
 colorize      = False
@@ -268,17 +293,16 @@ deformation = True
 distortion  = True
 sharpening  = False
 brightening = False
-
 barrdistortion = False
 
 [deformation]
 alpah    = 1300
-sigmoids  = [8.0]
+sigmoids  = [8.0, 10.0]
 
 [distortion]
 gaussian_filter_rsigma= 40
 gaussian_filter_sigma = 0.5
-distortions           = [0.02, 0.03]
+distortions           = [0.03, 0.04]
 
 [barrdistortion]
 radius = 0.3
@@ -310,8 +334,8 @@ By using this callback, on every epoch_change, the inference procedures can be c
 <img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/asset/epoch_change_infer.png" width="1024" height="auto"><br>
 <br>
 <br>
-The training process has just been stopped at epoch 36 by an early-stopping callback as shown below.<br><br>
-<img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/asset/train_console_output_at_epoch_36.png" width="720" height="auto"><br>
+The training process has just been stopped at epoch 38 by an early-stopping callback as shown below.<br><br>
+<img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/asset/train_console_output_at_epoch_38.png" width="720" height="auto"><br>
 <br>
 <br>
 <a href="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/eval/train_metrics.csv">train_metrics.csv</a><br>
@@ -334,10 +358,15 @@ and run the following bat file to evaluate TensorflowUNet model for Camelyon.<br
 python ../../../src/TensorflowUNetEvaluator.py ./train_eval_infer_aug.config
 </pre>
 Evaluation console output:<br>
-<img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/asset/evaluate_console_output_at_epoch_36.png" width="720" height="auto">
+<img src="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/asset/evaluate_console_output_at_epoch_38.png" width="720" height="auto">
 <br><br>
 <a href="./projects/TensorflowSlightlyFlexibleUNet/Camelyon/evaluation.csv">evaluation.csv</a><br>
-The loss (bce_dice_loss) and binary_accuracy for this mini_test dataset were very bad as shown below.<br>
+The loss (bce_dice_loss) and binary_accuracy for this mini_test dataset were slightly improved fromt the previous result.<br>
+<pre>
+loss,0.546
+binary_accuracy,0.7113
+</pre>
+previous result.<br>
 <pre>
 loss,0.7485
 binary_accuracy,0.6296
